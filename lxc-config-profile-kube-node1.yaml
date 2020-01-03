@@ -1,0 +1,38 @@
+name: kube-master
+description: "Profile for kubernetes master"
+devices:
+  eth0:
+    nictype: bridged
+    parent: lxdbr0
+    type: nic
+  eth1:
+    nictype: bridged
+    parent: kube-net
+    type: nic
+  root:
+    path: /
+    pool: default
+    type: disk
+config:
+  user.user-data: |
+    #cloud-config
+    package_upgrade: yes
+    apt:
+      primary:
+        - uri: "https://ja.archive.ubuntu.com/ubuntu"
+    timezone: Asia/Tokyo
+    users:
+      - name: kube
+        sudo:  ALL=(ALL) NOPASSWD:ALL
+        groups: [docker]
+        ssh-authorized-keys: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJfvMp4TuQD5Ihf9amotqPQFpr6jZ8qv8SvFz3d4K+6j
+    write_files:
+      - path: /etc/netplan/01-netcfg.yaml
+        content: |
+          network:
+            version: 2
+            ethernets:
+              eth1:
+                dhcp4: no
+                addresses: [10.121.5.3/24]
+                gateway4: 10.121.5.1
