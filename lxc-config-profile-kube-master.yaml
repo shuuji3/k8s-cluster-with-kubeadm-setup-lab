@@ -14,6 +14,9 @@ devices:
     pool: default
     type: disk
 config:
+  security.privileged: true
+  security.nesting: true
+  linux.kernel_modules: ip_tables,ip6_tables,netlink_diag,nf_nat,overlay
   user.user-data: |
     #cloud-config
     package_upgrade: yes
